@@ -42,6 +42,15 @@ client.on('ready', () =>  console.log(`I am logged as ${client.user.tag} and rea
 //     start: null,
 // }
 
+const HELP = 
+`Commande : 
+- !ping
+- !kh_bot help
+- !kh_bot start|stop
+- !kh_bot milestone <entier>
+- !kh_bot addRole @role
+- !kh_bot removeRole @role`
+
 // Crowl
 setInterval(async () => {
     launchCrawl();
@@ -62,7 +71,7 @@ client.on('message', message => {
     }
     // !kh_bot help
     if (command === "kh_bot" && args[0] === "help") {
-        message.channel.send("Commande : !kh_bot start, !stop, !help, !milestone <int>")
+        message.channel.send(HELP)
         return
     }
     // !kh_bot start
