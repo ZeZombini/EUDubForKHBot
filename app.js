@@ -44,6 +44,7 @@ client.on('ready', () =>  console.log(`I am logged as ${client.user.tag} and rea
 
 const HELP = 
 `Commande : 
+- !kh_bot signe
 - !ping
 - !kh_bot help
 - !kh_bot start|stop
@@ -58,14 +59,18 @@ setInterval(async () => {
 
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-    
-    if(!isAllow(message)){
-        return
-    }
-
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
+    // !kh_bot signe
+    if (command === "kh_bot" && args[0] === "signes") {
+        message.channel.send("Nous sommes à " + oldCount + " signatures =)")
+        return
+    }
+    // Protected zone - Only allowed user can use following commands
+    if(!isAllow(message)){
+        return
+    }
     if (command === "ping"){
         message.channel.send("Pong !")
     }
