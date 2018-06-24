@@ -34,7 +34,7 @@ optionsRequest = {
     json: true
 }
 
-client.on('ready', () =>  console.log(`I am logged as ${client.user.tag} and ready!`));
+client.on('ready', () =>  console.log(moment().format() + ` - I am logged as ${client.user.tag} and ready!`));
 
 // let exempleStruct = {
 //     id: null,
@@ -133,7 +133,7 @@ client.login(token);
 var launchCrawl = async function(){
     console.log("--")
     console.log(moment().format() + " - Starting crawl")
-    let newCount = await rp(optionsRequest).then((res) => {console.log("Response");return res[0].petition.total_signature_count;})
+    let newCount = await rp(optionsRequest).then((res) => {console.log(moment().format() +  " - Response");return res[0].petition.total_signature_count;})
     console.log(moment().format() + " - NewCount: " + newCount + " (old: " + oldCount + ")")
     let key
     for (key in channels){
