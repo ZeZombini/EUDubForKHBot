@@ -3,6 +3,6 @@ module.exports = {
       name: "EUDubForKHBot",
       script: "./app.js",
       watch: true,
-      ignore_watch: ['data.db']
+      ignore_watch: ['data.db', ".git/*"]
     }]
   }
