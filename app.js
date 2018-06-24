@@ -64,7 +64,7 @@ client.on('message', message => {
 
     // !kh_bot signe
     if (command === "kh_bot" && args[0] === "signes") {
-        message.channel.send("Nous sommes à " + oldCount + " signatures =)")
+        message.channel.send("Nous sommes à " + numberWithSpaces(oldCount) + " signatures =)")
         return
     }
     // Protected zone - Only allowed user can use following commands
