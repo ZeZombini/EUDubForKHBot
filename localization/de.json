@@ -1,0 +1,11 @@
+{
+    "HELLO": "Hallo ! =)",
+    "LANG_CHANGE":  "Die Sprache ist geändert",
+    "SIGN" : "Wir haben jetzt {{nbSignes}} Unterschriften",
+    "START" : "Anschaltung des **bots** in diesem **channel**",
+    "STOP" : "Ausschaltung des **bots** in diesem **channel**",
+    "INT_WANTED" : "Ganze Zahl erwartet",
+    "CHANGE_OK" : "Veränderung berücksichtigt",
+    "TADA_TITLE": ":tada: :tada: Ziel überschritten ! ( {{nbSignes}} Unterschritten ) :tada: :tada:",
+    "TADA_DESC": "*({{nbSignes}} Untershritten)*"
+}

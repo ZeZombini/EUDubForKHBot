@@ -5,6 +5,8 @@ const fs      = require("fs");
 const path    = require("path")
 const moment  = require("moment");
 
+const l10n = require('./localization')
+
 const prefix = require('./config/config.json').prefix;
 const token = require('./config/config.json').token;
 const TIME_INTERVAL = 1000 * 60 * 1 // 5 minutes
@@ -36,12 +38,14 @@ optionsRequest = {
 
 client.on('ready', () =>  console.log(moment().format() + ` - I am logged as ${client.user.tag} and ready!`));
 
-// let exempleStruct = {
-//     id: null,
-//     milestone: null,
-//     start: null,
-// }
-
+/**
+ * let exempleStruct = {
+ *     id: null,
+ *     milestone: null,
+ *     start: null,
+ *     language: fr|en|de|sp 
+ * }
+ **/
 const HELP = 
 `Commande : 
 - !kh_bot signe
@@ -62,11 +66,19 @@ client.on('message', message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    // !kh_bot signe
+    // Create default value for current channel
+    if (!channels[message.channel.id]) channels[message.channel.id] = {}
+    if (!(channels[message.channel.id].id)) channels[message.channel.id].id = message.channel.id
+    if (!(channels[message.channel.id].milestone)) channels[message.channel.id].milestone = 50
+    if (!(channels[message.channel.id].start)) channels[message.channel.id].start = false
+    if (!(channels[message.channel.id].language)) channels[message.channel.id].language = "fr"
+
+    // !kh_bot signes
     if (command === "kh_bot" && args[0] === "signes") {
-        message.channel.send("Nous sommes à " + numberWithSpaces(oldCount) + " signatures =)")
+        message.channel.send(l10n.t(channels[message.channel.id].language, "SIGN", {nbSignatures: numberWithSpaces(oldCount)}))
         return
     }
+
     // Protected zone - Only allowed user can use following commands
     if(!isAllow(message)){
         return
@@ -74,29 +86,31 @@ client.on('message', message => {
     if (command === "ping"){
         message.channel.send("Pong !")
     }
+
     // !kh_bot help
     if (command === "kh_bot" && args[0] === "help") {
         message.channel.send(HELP)
         return
     }
+
     // !kh_bot start
     if (command === "kh_bot" && args[0] === "start") {
-        if (!channels[message.channel.id]) channels[message.channel.id] = {milestone: 50}
         channels[message.channel.id].start = true;
-        message.channel.send("Starting bot in this channel")
-        // console.log(channels);
+        message.channel.send(l10n.t(channels[message.channel.id].language, "START", {}))
         
         saveConfig(channels)
         return
     }
+
     // !kh_bot stop
     if (command === "kh_bot" && args[0] === "stop") {
-        if (!channels[message.channel.id]) channels[message.channel.id] = {milestone: 50}
         channels[message.channel.id].start = false;
-        message.channel.send("Stoping bot in this channel")
+        message.channel.send(l10n.t(channels[message.channel.id].language, "STOP", {}))
+
         saveConfig(channels)
         return
     }
+
     // !kh_bot [milestone|ms] <num>
     if (command === "kh_bot" && (args[0] === "milestone" || args[0] === "ms")) {
         let ms = args[1];
@@ -104,13 +118,14 @@ client.on('message', message => {
         if (isNaN(parseInt(ms))) {
             message.channel.send("J'attends un nombre entier :/");
         } else {
-            if (!channels[message.channel.id]) channels[message.channel.id] = {}
             channels[message.channel.id].milestone = parseInt(ms);
             message.channel.send("Changement pris en compte !");
         }
         saveConfig(channels)
         return
     }
+
+    // !kh_bot addRole @mentions
     if (command === "kh_bot" && args[0] === "addRole"){
         if (onlyOneRole(message)){
             roles[message.mentions.roles.firstKey()] = {allow: true};
@@ -118,11 +133,25 @@ client.on('message', message => {
         }
         return;
     }
+
+    // !kh_bot addRole @mentions
     if (command === "kh_bot" && args[0] === "removeRole"){
         if (onlyOneRole(message)){
             roles[message.mentions.roles.firstKey()] = {allow: false};
             saveConfig();
         }
+        return;
+    }
+
+    // !kh_bot setLanguage fr|en|de|sp
+    if (command === "kh_bot" && args[0] === "setLanguage"){
+        if (args[1] != "fr" && args[1] != "en" && args[1] != "sp" && args[1] != "de")
+            message.channel.send("fr|sp|en|de")
+        
+        channels[message.channel.id].language = args[1];
+        message.channel.send(l10n.t(channels[message.channel.id].language, "LANG_CHANGE", {}))
+
+        saveConfig();
         return;
     }
 });
@@ -133,18 +162,22 @@ client.login(token);
 var launchCrawl = async function(){
     console.log("--")
     console.log(moment().format() + " - Starting crawl")
-    let newCount = await rp(optionsRequest).then((res) => {console.log(moment().format() +  " - Response");return res[0].petition.total_signature_count;})
+    // let newCount = await rp(optionsRequest).then((res) => {console.log(moment().format() +  " - Response");return res[0].petition.total_signature_count;})
     console.log(moment().format() + " - NewCount: " + newCount + " (old: " + oldCount + ")")
+
     let key
     for (key in channels){
         let newFloor = Math.floor(newCount/channels[key].milestone)
         if (channels[key].start && (newFloor > Math.floor(oldCount/channels[key].milestone))){
+            console.log(channels[key])
             // client.channels.get(key).send(`:tada: :tada: Le cap des ${newFloor*channels[key].milestone} a été dépassé ! :tada: :tada: (${newCount} signatures)`);
             client.channels.get(key).send({
                 embed: {
                     color: 52224,  //random color between one and 16777214 (dec)
-                    title: `:tada: :tada: Le cap des ${numberWithSpaces(newFloor*channels[key].milestone)} a été dépassé ! :tada: :tada:`,
-                    description: `*(${numberWithSpaces(newCount)} signatures)*`
+                    title: l10n.t(channels[key].language, "TADA_TITLE", {nbSignatures: numberWithSpaces(newFloor*channels[key].milestone)}),
+                    // title: `:tada: :tada: Le cap des ${numberWithSpaces(newFloor*channels[key].milestone)} a été dépassé ! :tada: :tada:`,
+                    description: l10n.t(channels[key].language, "TADA_DESC", {nbSignatures: numberWithSpaces(newCount)})
+                    // description: `*(${numberWithSpaces(newCount)} signatures)*`
                 }
             })
         }

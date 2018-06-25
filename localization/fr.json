@@ -1,0 +1,11 @@
+{
+    "HELLO":"Bonjour ! =)",
+    "LANG_CHANGE": "La langue a été changé !",
+    "SIGN" : "Nous sommes à {{nbSignatures}} signatures =)",
+    "START" : "Démarrage du bot dans ce channel",
+    "STOP" : "Arrêt du bot dans ce channel",
+    "INT_WANTED" : "J'attends un nombre entier",
+    "CHANGE_OK" : "Changement pris en compte !",
+    "TADA_TITLE": ":tada: :tada: Le cap des {{nbSignatures}} a été dépassé ! :tada: :tada:",
+    "TADA_DESC": "*({{nbSignatures}} signatures)*"
+}
