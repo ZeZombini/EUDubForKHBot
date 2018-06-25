@@ -162,7 +162,7 @@ client.login(token);
 var launchCrawl = async function(){
     console.log("--")
     console.log(moment().format() + " - Starting crawl")
-    // let newCount = await rp(optionsRequest).then((res) => {console.log(moment().format() +  " - Response");return res[0].petition.total_signature_count;})
+    let newCount = await rp(optionsRequest).then((res) => {console.log(moment().format() +  " - Response");return res[0].petition.total_signature_count;})
     console.log(moment().format() + " - NewCount: " + newCount + " (old: " + oldCount + ")")
 
     let key
