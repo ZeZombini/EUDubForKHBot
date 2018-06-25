@@ -1,11 +1,11 @@
 {
     "HELLO":"¡Hola! =)",
     "LANG_CHANGE": "¡La langua ha sido cambiado!",
-    "SIGN" : "Estamos a {{nbSignes}} firmas =)",
+    "SIGN" : "Estamos a {{nbSignatures}} firmas =)",
     "START" : "Iniciando el bot en este canal",
     "STOP" : "Deteniendo el bot en este canal",
     "INT_WANTED" : "Quiero un número completo",
     "CHANGE_OK" : "¡Cambio tomado en cuenta!",
-    "TADA_TITLE": ":tada: :tada: ¡El hito de {{nbSignes}} firmas ha sido excedido! :tada: :tada:",
-    "TADA_DESC": "*({{nbSignes}} firmas)*"
+    "TADA_TITLE": ":tada: :tada: ¡El hito de {{nbSignatures}} firmas ha sido excedido! :tada: :tada:",
+    "TADA_DESC": "*({{nbSignatures}} firmas)*"
 }
